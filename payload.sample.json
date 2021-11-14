@@ -1,0 +1,9 @@
+{
+    "audience": "https://api.flashfood.com/",
+    "client_id": "u2oBL41A94tidOe5KhoCV7R7tHnosgqg",
+    "grant_type": "http://auth0.com/oauth/grant-type/password-realm",
+    "password": "INSERT YOUR FLASHFOOD PASSWORD",
+    "realm": "flashfood-shoppers",
+    "scope": "offline_access openid profile email",
+    "username": "INSERT YOUR FLASHFOOD EMAIL"
+}
