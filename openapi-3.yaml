@@ -1,0 +1,302 @@
+openapi: 3.0.0
+
+servers:
+  - url: https://cors-anywhere.herokuapp.com/https://api.flashfood.com/api/v1/
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+security:
+  - bearerAuth: [] 
+
+paths:
+  /store/list:
+    get:
+      summary: List stores
+      parameters:
+        - in: query
+          name: food_images
+          schema:
+            type: integer
+            default: 1
+            enum: [0, 1]
+        - in: query
+          name: latitude
+          required: true
+          schema:
+            type: number
+            default: 43.65412141603176
+        - in: query
+          name: longitude
+          required: true
+          schema:
+            type: number
+            default: -79.4884292408824
+        - in: query
+          name: distance
+          schema:
+            type: number
+            default: 29.123718
+        - in: query
+          name: show_all
+          schema:
+            type: integer
+            default: 1
+            enum: [0, 1]
+      responses:
+        200:
+          description: Success
+  /item/list:
+    get:
+      summary: List store items
+      parameters:
+        - in: query
+          name: store_id
+          schema:
+            type: string
+            default: 5ccc4fa913ed23170c14db02
+      responses:
+        200:
+          description: Success
+  /user/credits:
+    get:
+      tags: [User]
+      summary: Get account credits for current user
+      responses:
+        200:
+          description: Success
+  /order/summary:
+    post:
+      tags: [Order]
+      summary: Create order summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      item_id:
+                        type: string
+                        default: 618fbbd81184490ed43902ef
+                      qty:
+                        type: integer
+                        default: 1
+                user_id:
+                  type: string
+                  default: 614cf858fa2a2e0e5d7af325
+      responses:
+        200:
+          description: Success
+  /user/metrics:
+    get:
+      tags: [User]
+      summary: Get account metrics for current user
+      responses:
+        200:
+          description: Success
+  /user:
+    get:
+      tags: [User]
+      summary: Get account details for current user
+      parameters:
+        - in: query
+          name: order_statuses
+          schema:
+            type: string
+            default: Transacted
+            enum:
+              - Transacted
+      responses:
+        200:
+          description: Success
+  /ordersdetails/{orderId}:
+    get:
+      tags: [Order]
+      summary: List a specific order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: statuses
+          schema:
+            type: string
+            default: Pickedup,MissedPickup,Transacted
+        - in: query
+          name: store_name
+          description: Filter for store name
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+  /ordersdetails:
+    get:
+      tags: [Order]
+      summary: List orders
+      parameters:
+        - in: query
+          name: order_ids
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+  /loyaltycards/{layaltyCardId}:
+    delete:
+      tags: [Loyalty Cards]
+      summary: Remove a loyalty card
+      parameters:
+        - in: path
+          name: layaltyCardId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Success
+  /loyaltycards:
+    get:
+      tags: [Loyalty Cards]
+      summary: List loyalty cards for current user
+      responses:
+        200:
+          description: Success
+    post:
+      tags: [Loyalty Cards]
+      summary: Add a loyalty card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                loyalty_type_id:
+                  type: string
+                  default: 5d9d3a2269f91441393cc61f
+                name:
+                  type: string
+                  default: Smith's Fuel Program
+                number:
+                  type: string
+                  default: 121212121212
+      responses:
+        200:
+          description: Success
+  /loyaltycards/types:
+    get:
+      tags: [Loyalty Cards]
+      summary: List loyalty card types
+      responses:
+        200:
+          description: Success
+  /user/referrallink:
+    post:
+      tags: [User]
+      summary: Create or fetch referral link
+      responses:
+        200:
+          description: Success
+  /settings/marketing:
+    put:
+      tags: [Settings]
+      summary: Update marketing settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                marketing_accepted:
+                  type: boolean
+                  default: false
+      responses:
+        200:
+          description: Success
+  /checkout/order:
+    post:
+      tags: [Checkout]
+      summary: Create an order checkout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order:
+                  type: object
+                  properties:
+                    total:
+                      type: string
+                      example: 748
+                    bags:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          store_id:
+                            type: string
+                            example: 5ccc4fa913ed23170c14daf3
+                          food_items:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                food_item_id:
+                                  type: string
+                                  default: 618fbbd81184490ed43902ef
+                                qty:
+                                  type: integer
+                                  default: 1
+                store_id:
+                  type: string
+                  example: 5ccc4fa913ed23170c14daf3
+      responses:
+        200:
+          description: Success
+  /checkout/pay:
+    post:
+      tags: [Checkout]
+      summary: Create an order payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_id:
+                  type: string
+                  example: 61916c84f6af872aa61dbb3b
+                order_number:
+                  type: string
+                  example: 2000001958974
+                savings:
+                  type: string
+                  example: "7.50"
+                stripe_card_id:
+                  type: string
+                  example: card_1Jd222FPR637RK8dTmnm5TLW
+      responses:
+        200:
+          description: Success
+info:
+  title: Flashfood API
+  version: v1
