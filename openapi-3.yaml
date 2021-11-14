@@ -14,8 +14,29 @@ security:
   - bearerAuth: [] 
 
 paths:
+  /store/nearest:
+    get:
+      tags: [Store]
+      summary: Get nearest store
+      parameters:
+        - in: query
+          name: latitude
+          required: true
+          schema:
+            type: number
+            default: 43.65412141603176
+        - in: query
+          name: longitude
+          required: true
+          schema:
+            type: number
+            default: -79.4884292408824
+      responses:
+        200:
+          description: Success
   /store/list:
     get:
+      tags: [Store]
       summary: List stores
       parameters:
         - in: query
